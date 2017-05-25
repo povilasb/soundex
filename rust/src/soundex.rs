@@ -10,11 +10,11 @@ pub fn soundex(word: &String) -> String {
         ].iter().cloned().collect();
     let suffix: String = word.chars().skip(1).collect();
     let first_letter: String = word.chars().take(1).collect();
-    return (first_letter + &rm_vowels(
+    return str_ensure_with_size(4, &(first_letter + &rm_vowels(
         &unique_str(
             &rm_hw(&suffix).chars().map(|c| tr_char(c, &map)).collect()
         )
-    )).chars().take(4).collect();
+    )))
 }
 
 // TODO: return iterator instead of string.
@@ -49,6 +49,14 @@ fn unique_str(word: &String) -> String {
         last_char = c;
     }
     return uniq;
+}
+
+fn str_ensure_with_size(n: usize, string: &String) -> String {
+    if string.len() > n {
+        string.chars().take(n).collect()
+    } else {
+        format!("{}{}", string, "0".to_string().repeat(n - string.len()))
+    }
 }
 
 #[cfg(test)]
@@ -102,8 +110,7 @@ mod tests {
         }
 
         it "appends zeroes when string is too short" {
-            // TODO
-            //assert!(soundex("Abuie".to_string()) == "A100");
+            assert_that!(&soundex(&"Abuie".to_string()), is(equal_to("A100")));
         }
 
         it "encodes word using soundex algorithm" {
@@ -112,6 +119,29 @@ mod tests {
             assert_that!(&soundex(&"Tymczak".to_string()), is(equal_to("T522")));
             // TODO
             //assert!(soundex("Pfister".to_string()) == "P263");
+        }
+    }
+
+    describe! str_ensure_with_size {
+        describe! when_string_is_shorter_than_desired_size {
+            it "returns string with 0oes appended to ensure proper size" {
+                assert_that!(str_ensure_with_size(4, &"ab".to_string()),
+                             is(equal_to("ab00".to_string())));
+            }
+        }
+
+        describe! when_string_is_exactly_the_same_size_as_desired {
+            it "returns the same string" {
+                assert_that!(str_ensure_with_size(4, &"abcd".to_string()),
+                             is(equal_to("abcd".to_string())));
+            }
+        }
+
+        describe! when_string_is_longer_than_desired_size {
+            it "returns trimmed string" {
+                assert_that!(str_ensure_with_size(4, &"abcdef".to_string()),
+                             is(equal_to("abcd".to_string())));
+            }
         }
     }
 }
