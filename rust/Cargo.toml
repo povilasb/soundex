@@ -5,3 +5,4 @@ authors = ["Povilas Balciunas"]
 
 [dev-dependencies]
 stainless = "*"
+hamcrest = "*"

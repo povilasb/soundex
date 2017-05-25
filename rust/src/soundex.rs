@@ -1,8 +1,5 @@
 use std::collections::HashMap;
 
-// TODO: use rustfmt
-// TODO: use more informative matchers
-
 pub fn soundex(word: &String) -> String {
     let map: HashMap<_, _> = [
             ('b', '1'), ('f', '1'), ('p', '1'), ('v' , '1'),
@@ -57,16 +54,17 @@ fn unique_str(word: &String) -> String {
 #[cfg(test)]
 mod tests {
     pub use super::*;
+    use hamcrest::prelude::*;
 
     describe! rm_hw {
         it "removes h and w in any case" {
-            assert!(rm_hw(&"haHbwcWd".to_string()) == "abcd");
+            assert_that!(&rm_hw(&"haHbwcWd".to_string()), is(equal_to("abcd")));
         }
     }
 
     describe! rm_vowels {
         it "removes them in any case" {
-            assert!(rm_vowels(&"aAbcdiI".to_string()) == "bcd");
+            assert_that!(&rm_vowels(&"aAbcdiI".to_string()), is(equal_to("bcd")));
         }
     }
 
@@ -77,7 +75,7 @@ mod tests {
 
             let new_val = tr_char('b', &map);
 
-            assert!(new_val == '2');
+            assert_that!(new_val, is(equal_to('2')));
         }
 
         it "returns the same character if it does not exist in the dictionary" {
@@ -86,7 +84,7 @@ mod tests {
 
             let new_val = tr_char('c', &map);
 
-            assert!(new_val == 'c');
+            assert_that!(new_val, is(equal_to('c')));
         }
     }
 
@@ -94,13 +92,13 @@ mod tests {
         it "returns string with no repeating adjacent characters" {
             let new_str = unique_str(&"aabccdee".to_string());
 
-            assert!(new_str == "abcde");
+            assert_that!(&new_str, is(equal_to("abcde")));
         }
     }
 
     describe! soundex {
         it "returns max 4 symbols" {
-            assert!(soundex(&"Abcdl".to_string()) == "A123");
+            assert_that!(&soundex(&"Abcdl".to_string()), is(equal_to("A123")));
         }
 
         it "appends zeroes when string is too short" {
@@ -109,9 +107,9 @@ mod tests {
         }
 
         it "encodes word using soundex algorithm" {
-            assert!(soundex(&"Ashcraft".to_string()) == "A261");
-            assert!(soundex(&"Ashcroft".to_string()) == "A261");
-            assert!(soundex(&"Tymczak".to_string()) == "T522");
+            assert_that!(&soundex(&"Ashcraft".to_string()), is(equal_to("A261")));
+            assert_that!(&soundex(&"Ashcroft".to_string()), is(equal_to("A261")));
+            assert_that!(&soundex(&"Tymczak".to_string()), is(equal_to("T522")));
             // TODO
             //assert!(soundex("Pfister".to_string()) == "P263");
         }

@@ -1,5 +1,6 @@
 #![feature(plugin)]
 #![cfg_attr(test, plugin(stainless))]
+#[cfg(test)] #[macro_use] extern crate hamcrest;
 
 mod soundex;
 use soundex::soundex;
