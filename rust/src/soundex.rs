@@ -58,60 +58,62 @@ fn unique_str(word: &String) -> String {
 mod tests {
     pub use super::*;
 
-    #[test]
-    fn rm_hw_removes_h_and_w_in_any_case() {
-        assert!(rm_hw(&"haHbwcWd".to_string()) == "abcd")
+    describe! rm_hw {
+        it "removes h and w in any case" {
+            assert!(rm_hw(&"haHbwcWd".to_string()) == "abcd");
+        }
     }
 
-    #[test]
-    fn rm_vowels_removes_them_in_any_case() {
-        assert!(rm_vowels(&"aAbcdiI".to_string()) == "bcd")
+    describe! rm_vowels {
+        it "removes them in any case" {
+            assert!(rm_vowels(&"aAbcdiI".to_string()) == "bcd");
+        }
     }
 
-    #[test]
-    fn tr_char_translates_given_letter_using_given_map() {
-        let map: HashMap<_, _> = [('a', '1'), ('b', '2')]
-            .iter().cloned().collect();
+    describe! tr_char {
+        it "translates given letter using given map" {
+            let map: HashMap<_, _> = [('a', '1'), ('b', '2')]
+                .iter().cloned().collect();
 
-        let new_val = tr_char('b', &map);
+            let new_val = tr_char('b', &map);
 
-        assert!(new_val == '2')
+            assert!(new_val == '2');
+        }
+
+        it "returns the same character if it does not exist in the dictionary" {
+            let map: HashMap<_, _> = [('a', '1'), ('b', '2')]
+                .iter().cloned().collect();
+
+            let new_val = tr_char('c', &map);
+
+            assert!(new_val == 'c');
+        }
     }
 
-    #[test]
-    fn tr_char_returns_the_same_character_if_it_does_not_exist_in_the_dictionary() {
-        let map: HashMap<_, _> = [('a', '1'), ('b', '2')]
-            .iter().cloned().collect();
+    describe! unique_str {
+        it "returns string with no repeating adjacent characters" {
+            let new_str = unique_str(&"aabccdee".to_string());
 
-        let new_val = tr_char('c', &map);
-
-        assert!(new_val == 'c')
+            assert!(new_str == "abcde");
+        }
     }
 
-    #[test]
-    fn unique_str_returns_string_with_no_repeating_adjacent_characters() {
-        let new_str = unique_str(&"aabccdee".to_string());
+    describe! soundex {
+        it "returns max 4 symbols" {
+            assert!(soundex(&"Abcdl".to_string()) == "A123");
+        }
 
-        assert!(new_str == "abcde");
-    }
+        it "appends zeroes when string is too short" {
+            // TODO
+            //assert!(soundex("Abuie".to_string()) == "A100");
+        }
 
-    #[test]
-    fn soundex_returns_max_4_symbols() {
-        assert!(soundex(&"Abcdl".to_string()) == "A123");
-    }
-
-    #[test]
-    fn soundex_appends_zeroes_when_string_is_too_short() {
-        // TODO
-        //assert!(soundex("Abuie".to_string()) == "A100");
-    }
-
-    #[test]
-    fn soundex_encodes_word_using_soundex_algorithm() {
-        assert!(soundex(&"Ashcraft".to_string()) == "A261");
-        assert!(soundex(&"Ashcroft".to_string()) == "A261");
-        assert!(soundex(&"Tymczak".to_string()) == "T522");
-        // TODO
-        //assert!(soundex("Pfister".to_string()) == "P263");
+        it "encodes word using soundex algorithm" {
+            assert!(soundex(&"Ashcraft".to_string()) == "A261");
+            assert!(soundex(&"Ashcroft".to_string()) == "A261");
+            assert!(soundex(&"Tymczak".to_string()) == "T522");
+            // TODO
+            //assert!(soundex("Pfister".to_string()) == "P263");
+        }
     }
 }
